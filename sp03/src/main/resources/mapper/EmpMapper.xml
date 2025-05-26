@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.web.mapper.EmpMapper">
+
+	<select id="findAll" resultType="Employees" parameterType="SearchVO">
+		select * from employees
+		<where>
+			<if test="departmentId != null">and department_id = #{departmentId}</if>
+			<if test="employeeId != null"> and employee_id in
+				<foreach collection="ids" item="id" open="(" close= ")" separator=",">#{id}
+				</foreach>
+			</if>
+			<if test="salary != null">and salary <![CDATA[<]]> #{salary}</if>
+		</where>
+	</select>
+
+	<select id="findAlltoMap" resultType="map">
+		select employee_id
+		"employee_id",
+		first_name "first_name",
+		last_name
+		from employees
+	</select>
+
+	<select id="getCount" resultType="Employees">
+		select department_id, count(*)
+		cnt from employees group by department_id
+	</select>
+
+	<insert id="insert" parameterType="employees">
+		insert into employees (
+		EMPLOYEE_ID, 
+		LAST_NAME, 
+		EMAIL, 
+		HIRE_DATE, 
+		JOB_ID)
+		
+		values(
+		#{employeeId}, 
+		#{lastName}, 
+		#{email}, 
+		#{hireDate}, 
+		#{jobId}
+		)
+	</insert>
+	
+	<update id="updateFirstName" parameterType="Employees">
+		update employees 
+		set	 first_name = #{firstName}
+		where employee_id = #{employeeId}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		DELETE  FROM employees
+		WHERE employee_id = #{value} 
+	</delete>
+
+</mapper>
