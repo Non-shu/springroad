@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.web.mapper.EmpMapper">
+
+	<select id="findAll" resultType="Employees" parameterType="SearchVO">
+		select * from tbl_board
+		<where>
+			<if test="title != null">and title = #{title}</if>
+		</where>
+	</select>	
+
+	<select id="findById" resultType="Board" parameterType="SearchVO">
+	select * from tbl_board
+	<where>
+		<if test="bno != null"> and bno in
+			<foreach collection="ids" item="id" open="(" close=")" separator=",">#{bno}
+			</foreach>
+		</if>
+	</where>
+	</select>
+
+	<insert id="insert" parameterType="board">
+		insert into tbl_board (
+		bno, 
+		title, 
+		content, 
+		writer)
+		
+		values(
+		#{bno}, 
+		#{title}, 
+		#{content}, 
+		#{writer}
+		)
+	</insert>
+	
+	<update id="update" parameterType="Board">
+		update tbl_board 
+		set	 bno = #{bno}
+		where content = #{content}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		DELETE  FROM tbl_board
+		WHERE bno = #{value} 
+	</delete>
+
+</mapper>
